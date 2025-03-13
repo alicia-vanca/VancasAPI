@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Vanca's Dream</title>
+	</head>
+	<body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0" style="padding: 0;">
+		<div id="wrapper" dir="ltr" style="background-color: #f7f7f7; margin: 0; padding: 70px 0; width: 100%; -webkit-text-size-adjust: none;" bgcolor="#f7f7f7" width="100%">
+			<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%">
+				<tr>
+					<td align="center" valign="top">
+						<div id="template_header_image">
+							<p style="margin-top: 0;"><img src="http://vancasdream.com/wp-content/uploads/2021/09/150x150-Logo-email.png" alt="Vanca's Dream" style="border: none; display: inline-block; font-size: 14px; font-weight: bold; height: auto; outline: none; text-decoration: none; text-transform: capitalize; vertical-align: middle; max-width: 100%; margin-left: 0; margin-right: 0;" border="0"></p>						</div>
+						<table border="0" cellpadding="0" cellspacing="0" width="600" id="template_container" style="background-color: #fff; border: 1px solid #dedede; box-shadow: 0 1px 4px rgba(0,0,0,.1); border-radius: 3px;" bgcolor="#fff">
+							<tr>
+								<td align="center" valign="top">
+									<!-- Header -->
+									<table border="0" cellpadding="0" cellspacing="0" width="100%" id="template_header" style='background-color: #58aaaa; color: #fff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif; border-radius: 3px 3px 0 0;' bgcolor="#58aaaa">
+										<tr>
+											<td id="header_wrapper" style="padding: 36px 48px; display: block;">
+												<h1 style='font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif; font-size: 30px; font-weight: 300; line-height: 150%; margin: 0; text-align: left; text-shadow: 0 1px 0 #79bbbb; color: #fff; background-color: inherit;' bgcolor="inherit"><?= $contentHeader ?></h1>
+											</td>
+										</tr>
+									</table>
+									<!-- End Header -->
+								</td>
+							</tr>
+							<tr>
+								<td align="center" valign="top">
+									<!-- Body -->
+									<table border="0" cellpadding="0" cellspacing="0" width="600" id="template_body">
+										<tr>
+											<td valign="top" id="body_content" style="background-color: #fff;" bgcolor="#fff">
+												<!-- Content -->
+												<table border="0" cellpadding="20" cellspacing="0" width="100%">
+													<tr>
+														<td valign="top" style="padding: 48px 48px 32px;">
+															<div id="body_content_inner" style='color: #636363; font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif; font-size: 14px; line-height: 150%; text-align: left;' align="left">
+
+																<p style="margin: 0 0 16px;"><?= $contentBody ?></p>
+																<table id="orderDetail" style="width: 100%; border-collapse: collapse; border: 1px solid #e5e5e5;">
+																	<thead>
+																	  <tr>
+																		<th style="border: 1px solid #e5e5e5; padding: 7px; text-align: center;">Photo</th>
+																		<th style="border: 1px solid #e5e5e5; padding: 7px; text-align: center;">Name</th>
+																		<th style="border: 1px solid #e5e5e5; padding: 7px; text-align: center;">Variation</th>
+																		<th style="border: 1px solid #e5e5e5; padding: 7px; text-align: center;">Quantity</th>
+																	  </tr>
+																	</thead>
+																	<tbody>
+																	<?php 
+																		foreach ($orderItems as $item) {
+																			echo "<tr>";
+																			echo "<td style='border: 1px solid #e5e5e5; padding: 0;'><img src='".$item['product_main_image']."' style='max-width: 80px; max-height: 80px;'</td>";
+																			echo "<td style='border: 1px solid #e5e5e5; padding: 7px;'>".$item['name']."</td>";
+																			echo "<td style='border: 1px solid #e5e5e5; padding: 7px;'>".$item['sku']."<br>".$item['variation']."</td>";
+																			echo "<td style='border: 1px solid #e5e5e5; padding: 7px; text-align: center;'>1</td>";
+																			echo "</tr>";
+																		}
+																	?>
+																	</tbody>
+																</table>
+															</div>
+														</td>
+													</tr>
+												</table>
+												<!-- End Content -->
+											</td>
+										</tr>
+									</table>
+									<!-- End Body -->
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td align="center" valign="top">
+						<!-- Footer -->
+						<table border="0" cellpadding="10" cellspacing="0" width="600" id="template_footer">
+							<tr>
+								<td valign="top" style="padding: 0; border-radius: 6px;">
+									<table border="0" cellpadding="10" cellspacing="0" width="100%">
+										<tr>
+											<td colspan="2" valign="middle" id="credit" style='border-radius: 6px; border: 0; color: #8a8a8a; font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif; font-size: 12px; line-height: 150%; text-align: center; padding: 24px 0;' align="center">
+												<p style="margin: 0 0 16px;"><a href="vancasdream.com" style="color: #58aaaa; font-weight: normal; text-decoration: underline;">Vanca's Dream</a> - Thời trang chính hãng</p>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+						<!-- End Footer -->
+					</td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>

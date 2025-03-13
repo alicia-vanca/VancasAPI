@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{fragments/layout :: layout (~{::body},'index')}">
+
+<head>
+    <title>ABC | XYZ</title>
+    <meta charset="utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>	
+<body>
+	<div>
+		<label for="sku">SKU:</label>
+		<input type="text" id="sku" placeholder="SKU">
+		<button id="refresh"><i class="fa fa-refresh"></i></button>
+ 		<br>
+ 		<div>
+ 			<h2>Woocommerce</h2>
+ 			<p id="wooTitle"></p>
+ 			<p id="wooVariation"></p>
+			<label for="wooQuantity">Quantity:</label>
+			<input id="wooQuantity" type="number" min="0" max="999">
+			<button id="updateWooQuantity"><i class="fa fa-check"></i></button>
+ 			<p class="result" id="wooSuccess"></p>
+ 			<p class="result" id="wooWarning"></p>
+ 			<p class="result" id="wooError"></p>
+		</div>
+ 		<div>
+ 			<h2>Lazada</h2>
+ 			<p id="lazTitle"></p>
+ 			<p id="lazVariation"></p>
+ 			<p id="lazTotalQuantity" hidden></p>
+ 			<table>
+				<tbody>
+  					<tr>
+    					<td><label for="lazQuantity-HN">Kho HN:</label></td>
+    					<td>
+    						<input id="lazQuantity-HN" type="number" min="0" max="999">
+					    	<button id="updateLazHnQuantity"><i class="fa fa-check"></i></button>
+					    </td>
+    					<td rowspan="2"  style="padding-left: 20px;">
+					    	<button id="updateLazBothQuantity"><i class="fa fa-check"></i></button>
+					    </td>
+  					</tr>
+  					<tr>
+					    <td><label for="lazQuantity-HCM">Kho HCM:</label></td>
+					    <td>
+					    	<input id="lazQuantity-HCM" type="number" min="0" max="999">
+					    	<button id="updateLazHcmQuantity"><i class="fa fa-check"></i></button>
+					    </td>
+  					</tr>
+				</tbody>
+			</table>
+ 			<p class="result" id="lazSuccess"></p>
+ 			<p class="result" id="lazWarning"></p>
+ 			<p class="result" id="lazError"></p>
+		</div>
+ 		<div>
+ 			<h2>Tiki</h2>
+ 			<p id="tikiTitle">tikiTitle</p>
+ 			<p id="tikiVariation">tikiVariation</p>
+			<input id="tikiQuantity" type="number" min="0" max="999">
+		</div>		
+	</div>
+	<h1>Update quantity Lazada</h1>
+	<input type="text" id="skuLazada" placeholder="SKU">
+	<input type="text" id="quantityLazada" placeholder="Quantity">
+	<button id="quantityUpdateLazada">Update</button>
+	<h2>
+		Kết quả: <span id="resultLazada"></span>
+	</h2>
+
+	<br />
+	<br />
+
+	<h1>Woocommerce</h1>
+	<input type="text" id="skuWoo" placeholder="SKU">
+	<input type="text" id="quantityWoo" placeholder="Quantity">
+	<button id="getIdFromSkuWoo">Get ID</button>
+	<button id="updateProductQuantityWoo">Update quantity</button>
+	<h2>
+		Kết quả: <span id="resultWoo"></span>
+	</h2>
+
+	<br />
+	<br />
+
+	<h1>Sync Lazada quantity from Woo</h1>
+	<p>Laz products to sync:</p>
+	 
+	<input type="radio" id="all" name="syncMode" value="all">  
+	<label for="all">All</label>
+	<br>  
+	<input type="radio" id="sold-out" name="syncMode" value="sold-out">  
+	<label for="sold-out">Sold-out</label>
+	<br>  
+	<input type="radio" id="live" name="syncMode" value="live">  
+	<label for="live">Live</label>
+	<br>  
+	<input type="radio" id="inactive" name="syncMode" value="inactive">  
+	<label for="inactive">Inactive</label>
+	<br>  
+	<button id="syncLazFromWoo">Update quantity</button>
+
+	<h2>
+		Kết quả: <pre id="syncLazFromWooResult"></pre>
+	</h2>
+
+	<br />
+	<br />
+	
+	<button id="checkStatus">Check</button>
+	<script>
+		function getInfo() {
+			if ($('#sku').val()) {
+				$('.result').text('');
+				$("input").prop("disabled", true);
+				var data = {};
+				data['sku'] = $('#sku').val();
+				$.ajax({
+					url : '/api_path/getProductInfo.php',
+					data : data,
+					type : 'post',
+					success : function(result) {
+						$("input").prop("disabled", false);
+						console.log(result);
+						$('#wooTitle').text($("<div/>").html(result.woo.name).text());
+						$('#wooVariation').text(result.woo.attributes);
+						$('#wooQuantity').val(result.woo.quantity);
+
+						$('#lazTitle').text(result.laz.name);
+						$('#lazVariation').text(result.laz.attributes);
+						$('#lazTotalQuantity').text(result.laz.totalQuantity);
+						$('#lazQuantity-HN').val(result.laz.HN);
+						$('#lazQuantity-HCM').val(result.laz.HCM);
+					},
+					dataType:"json"
+				});
+			}
+		};
+		$('#sku').change(getInfo);
+		$('#refresh').click(getInfo);
+
+		function updateWooQuantity() {
+			if ($('#sku').val() && $('#wooQuantity').val()) {
+				$('.result').text('');
+				$("input").prop("disabled", true);
+				var data = {};
+				data['sku'] = $('#sku').val();
+				data['newQuantity'] = $('#wooQuantity').val();
+				$.ajax({
+					url : '/api_path/woo/updateWooQuantity.php',
+					data : data,
+					type : 'post',
+					success : function(result) {
+						$("input").prop("disabled", false);
+						console.log(result);		
+						$('#wooSuccess').text(result);
+					}
+				});
+			}
+		};
+		$('#updateWooQuantity').click(updateWooQuantity);
+
+
+		function updateLazQuantity(event) {
+			if ($('#sku').val()) {
+				var data = {};
+                data['warehouses'] = {};
+				data['newQuantities'] = {};
+
+				data['sku'] = $('#sku').val();
+
+				var i = 0;
+				if ('HN' == event.data.warehouse || 'BOTH' == event.data.warehouse) {
+					data['warehouses'][i] = 'HN';
+					data['newQuantities'][i++] = $('#lazQuantity-HN').val();
+				};
+				if ('HCM' == event.data.warehouse || 'BOTH' == event.data.warehouse) {
+					data['warehouses'][i] = 'HCM';
+					data['newQuantities'][i++] = $('#lazQuantity-HCM').val();
+				}
+
+				$('.result').text('');
+				$("input").prop("disabled", true);
+
+				$.ajax({
+					url : '/api_path/laz/updateLazQuantity.php',
+					data : data,
+					type : 'post',
+					success : function(result) {
+						getInfo();
+						setTimeout(function(){
+    						$("input").prop("disabled", false);
+							console.log(result);
+							$('#lazSuccess').html(result); 
+						}, 600);
+					}
+				});
+			};
+		};
+		$('#updateLazHnQuantity').click({warehouse:'HN'}, updateLazQuantity);
+		$('#updateLazHcmQuantity').click({warehouse:'HCM'}, updateLazQuantity);
+		$('#updateLazBothQuantity').click({warehouse:'BOTH'}, updateLazQuantity);
+
+		$('#getIdFromSkuWoo').click(function() {
+			
+			$('#resultWoo').text("");
+			
+			$.ajax({
+				url : '/getIdFromSkuWoo',
+				data : {
+					"sku" : $('#skuWoo').val()
+				},
+				type : 'post',
+				success : function(result) {
+					$('#resultWoo').text(result);
+				}
+			});
+		});
+
+		$('#updateProductQuantityWoo').click(function() {
+
+			$('#resultWoo').text("");
+			
+			$.ajax({
+				url : '/updateProductQuantityWoo',
+				data : {
+					"sku" : $('#skuWoo').val(),
+					"quantity" : $('#quantityWoo').val()
+				},
+				type : 'post',
+				success : function(result) {
+					$('#resultWoo').text(result);
+				}
+			});
+		});
+
+		$('#syncLazFromWoo').click(function() {
+
+			$('#syncLazFromWooResult').text("");
+			
+			$.ajax({
+				url : '/syncLazFromWoo',
+				data : {
+					"mode" : $('input[name="syncMode"]:checked').val()
+				},
+				type : 'post',
+				success : function(result) {
+					$('#syncLazFromWooResult').text(result);
+				}
+			});
+		});
+
+		$('#checkStatus').click(function() {			
+			$.ajax({
+				url : '/checkStatus',
+				type : 'post'
+			});
+		});
+	</script>
+
+	<style>  
+
+		input[type=number]::-webkit-inner-spin-button {
+			opacity: 1;
+		}
+		input[type=number] {
+			text-align: center;
+		}
+
+	</style>
+</body>
+</html>
