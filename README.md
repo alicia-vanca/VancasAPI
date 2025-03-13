@@ -1,2 +1,2 @@
 # VancasAPI
- Sync stock between platforms
+ Sync instock between platforms
